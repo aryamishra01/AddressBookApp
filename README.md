@@ -3,12 +3,12 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC8 – Search Person by City or State
-This branch introduces functionality to search contacts by city or state across all address books.
+## 🚀 UC9 – View Persons by City or State
+This branch introduces functionality to view all persons grouped by their city or state.
 
-The search feature allows users to retrieve contacts that belong to a specific city or state, making it easier to locate people based on geographic information.
+Unlike UC8 where contacts were searched individually, UC9 allows users to view a grouped list of contacts based on city or state.
 
-The implementation uses Java Streams API to efficiently filter contacts.
+This feature uses the Java Streams API with grouping operations.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -56,95 +56,85 @@ Client (CURL / Postman)
 Map<String, AddressBook>
         │
         ▼
-Java Streams Filtering
+Java Streams Grouping
 ```
 
-Contacts from all address books are collected and filtered using Streams.
-
-## 🔎 Search Logic (Java Streams)
-
-Contacts are retrieved using:
-
-```
-addressBooks.values()
-        .stream()
-        .flatMap(addressBook -> addressBook.getContacts().stream())
-```
-
-Then filtered by **city** or **state**.
+Contacts are retrieved from all address books and grouped by **city or state**.
 
 ## 🌐 API Endpoints
 
-### 🔍 Search by City
+### 📍 View Persons by City
 ```
-GET /contacts/city/{city}
-```
-
-Example:
-
-```
-GET /contacts/city/Bhopal
+GET /contacts/view/city
 ```
 
-### 🔍 Search by State
-```
-GET /contacts/state/{state}
-```
+Returns contacts grouped by city.
 
-Example:
+Example Response:
 
 ```
-GET /contacts/state/MP
+{
+ "Bhopal": [
+   { "firstName": "Arya", "lastName": "Mishra" },
+   { "firstName": "Rahul", "lastName": "Sharma" }
+ ],
+ "Delhi": [
+   { "firstName": "Priya", "lastName": "Patel" }
+ ]
+}
+```
+
+### 📍 View Persons by State
+```
+GET /contacts/view/state
+```
+
+Returns contacts grouped by state.
+
+Example Response:
+
+```
+{
+ "MP": [
+   { "firstName": "Arya", "lastName": "Mishra" }
+ ],
+ "Delhi": [
+   { "firstName": "Rahul", "lastName": "Sharma" }
+ ]
+}
 ```
 
 ## 🧪 Testing Using CURL
 
-### Search by City
+### View Persons by City
 ```
-curl http://localhost:8080/contacts/city/Bhopal
-```
-
-### Search by State
-```
-curl http://localhost:8080/contacts/state/MP
+curl http://localhost:8080/contacts/view/city
 ```
 
-### Example Response
+### View Persons by State
 ```
-[
- {
-  "id":1,
-  "firstName":"Arya",
-  "lastName":"Mishra",
-  "city":"Bhopal",
-  "state":"MP"
- }
-]
+curl http://localhost:8080/contacts/view/state
 ```
 
 ## ▶️ How to Run the Project
 
-### Clone repository
+Clone repository:
+
 ```
 git clone https://github.com/<your-username>/AddressBookApp.git
 ```
 
-### Run project
+Run application:
+
 ```
 mvn spring-boot:run
 ```
 
-or run
-
-```
-AddressBookAppApplication.java
-```
-
-from your IDE.
+or run **AddressBookAppApplication.java** from your IDE.
 
 ## 🌿 Git Branch
 ```
-feature/UC8-search-person-by-city-or-state
+feature/UC9-view-persons-by-city-or-state
 ```
 
 After review this branch will be merged into:
