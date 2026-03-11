@@ -3,13 +3,13 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC5 – Add Multiple Contacts
-This branch implements the ability to add multiple contacts to the Address Book in a single request.
+## 🚀 UC6 – Multiple Address Books
+This branch introduces support for multiple Address Books in the system.
 
-Previously, contacts could only be added one at a time.  
-With UC5, the system now supports bulk insertion of contacts using a REST API.
+Previously, the application supported only one list of contacts.  
+With UC6, the system now allows users to create and manage multiple address books, each containing its own contacts.
 
-Contacts are stored in a local in-memory list and handled through the Service Layer.
+Each Address Book has a unique name and stores a list of contacts.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -32,6 +32,7 @@ AddressBookApp
 │   │
 │   ├── model
 │   │      Contact.java
+│   │      AddressBook.java
 │   │
 │   └── AddressBookAppApplication.java
 │
@@ -52,28 +53,49 @@ Client (CURL / Postman / Browser)
          Service
             │
             ▼
-     Local List Storage
+     Map<String, AddressBook>
 ```
 
-### Responsibilities
+Each AddressBook contains its own list of contacts.
 
-**Controller**
+Example structure:
 
-Handles HTTP requests  
-Maps API endpoints  
-Communicates with service layer  
+```
+AddressBooks
+│
+├── Personal
+│     ├── Contact1
+│     └── Contact2
+│
+├── Work
+│     ├── Contact1
+│     └── Contact2
+```
 
-**Service**
+## 📦 Data Structure Used
+A Map is used to store address books.
 
-Contains business logic  
-Performs CRUD operations on contacts  
+```
+Map<String, AddressBook>
+```
 
-**Model**
+Where:
 
-Defines the Contact data structure  
+| Key | Value |
+|-----|------|
+| AddressBook Name | AddressBook Object |
+
+Example:
+
+```
+{
+ "Personal": AddressBook,
+ "Work": AddressBook
+}
+```
 
 ## 👤 Contact Model
-The Contact class represents a person in the Address Book.
+The Contact class represents a person in an Address Book.
 
 ### Fields
 
@@ -89,69 +111,84 @@ The Contact class represents a person in the Address Book.
 | phoneNumber | Contact number |
 | email | Email address |
 
+## 📚 AddressBook Model
+The AddressBook class represents a collection of contacts.
+
+### Fields
+
+| Field | Description |
+|------|-------------|
+| name | Name of address book |
+| contacts | List of contacts |
+
 ## 🌐 API Endpoints
 
-### ➕ Add Contact
+### 📚 Create Address Book
 ```
-POST /contacts
+POST /addressbooks?name=Personal
 ```
-Adds a single contact.
+Creates a new address book.
 
-### 📦 Add Multiple Contacts
+### 📋 Get All Address Books
 ```
-POST /contacts/bulk
+GET /addressbooks
 ```
-Adds multiple contacts in a single request.
+Returns all address books in the system.
 
-### 📋 Get All Contacts
+### ➕ Add Contact to Address Book
 ```
-GET /contacts
+POST /addressbooks/{name}/contacts
 ```
-Returns all contacts stored in memory.
+Adds a contact to a specific address book.
 
-### 🔍 Get Contact by ID
-```
-GET /contacts/{id}
-```
-Returns the contact matching the given ID.
+Example:
 
-### ✏️ Update Contact
 ```
-PUT /contacts/{id}
+POST /addressbooks/Personal/contacts
 ```
-Updates contact details.
 
-### ❌ Delete Contact
+### 👥 Get Contacts from Address Book
 ```
-DELETE /contacts/{id}
+GET /addressbooks/{name}/contacts
 ```
-Deletes the contact with the specified ID.
+Returns all contacts from the specified address book.
+
+Example:
+
+```
+GET /addressbooks/Personal/contacts
+```
 
 ## 🧪 Testing Using CURL
 
-### Add Multiple Contacts
+### Create Address Book
 ```
-curl -X POST http://localhost:8080/contacts/bulk -H "Content-Type: application/json" -d "[{\"id\":2,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"MP Nagar\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"8888888888\",\"email\":\"arya@email.com\"},{\"id\":3,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"Bhopal\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"7777777777\",\"email\":\"arya@email.com\"}]"
+curl -X POST "http://localhost:8080/addressbooks?name=Personal"
 ```
 
-### Get All Contacts
+### Add Contact
 ```
-curl http://localhost:8080/contacts
+curl -X POST http://localhost:8080/addressbooks/Personal/contacts -H "Content-Type: application/json" -d "{\"id\":1,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"city\":\"Bhopal\"}"
+```
+
+### Get Contacts
+```
+curl http://localhost:8080/addressbooks/Personal/contacts
 ```
 
 ## ▶️ How to Run the Project
 
-### 1️⃣ Clone the repository
+### 1️⃣ Clone repository
 ```
 git clone https://github.com/<your-username>/AddressBookApp.git
 ```
 
-### 2️⃣ Navigate to the project
+### 2️⃣ Navigate to project
 ```
 cd AddressBookApp
 ```
 
-### 3️⃣ Run the Spring Boot application
+### 3️⃣ Run application
 ```
 mvn spring-boot:run
 ```
@@ -166,15 +203,15 @@ from your IDE.
 
 ### 4️⃣ Access APIs
 ```
-http://localhost:8080/contacts
+http://localhost:8080/addressbooks
 ```
 
 ## 🌿 Git Branch
 ```
-feature/UC5-add-multiple-contacts
+feature/UC6-multiple-addressbooks
 ```
 
-This branch implements Use Case 5 – Add Multiple Contacts.
+This branch implements Use Case 6 – Multiple Address Books.
 
 After review it will be merged into:
 
