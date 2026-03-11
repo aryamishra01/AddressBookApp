@@ -3,18 +3,13 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC4 – Delete Contact
-This branch implements the ability to delete an existing contact from the Address Book.
+## 🚀 UC5 – Add Multiple Contacts
+This branch implements the ability to add multiple contacts to the Address Book in a single request.
 
-The application now supports:
+Previously, contacts could only be added one at a time.  
+With UC5, the system now supports bulk insertion of contacts using a REST API.
 
-➕ Adding contacts  
-📋 Viewing all contacts  
-🔍 Retrieving contact by ID  
-✏️ Updating contact  
-❌ Deleting contact by ID  
-
-Contacts are stored in a local in-memory list and managed through a Service Layer.
+Contacts are stored in a local in-memory list and handled through the Service Layer.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -65,7 +60,7 @@ Client (CURL / Postman / Browser)
 **Controller**
 
 Handles HTTP requests  
-Maps API endpoints to methods  
+Maps API endpoints  
 Communicates with service layer  
 
 **Service**
@@ -100,7 +95,13 @@ The Contact class represents a person in the Address Book.
 ```
 POST /contacts
 ```
-Adds a new contact.
+Adds a single contact.
+
+### 📦 Add Multiple Contacts
+```
+POST /contacts/bulk
+```
+Adds multiple contacts in a single request.
 
 ### 📋 Get All Contacts
 ```
@@ -112,23 +113,13 @@ Returns all contacts stored in memory.
 ```
 GET /contacts/{id}
 ```
-Returns contact matching the given ID.
-
-Example:
-```
-GET /contacts/1
-```
+Returns the contact matching the given ID.
 
 ### ✏️ Update Contact
 ```
 PUT /contacts/{id}
 ```
-Updates contact information.
-
-Example:
-```
-PUT /contacts/1
-```
+Updates contact details.
 
 ### ❌ Delete Contact
 ```
@@ -136,31 +127,16 @@ DELETE /contacts/{id}
 ```
 Deletes the contact with the specified ID.
 
-Example:
-```
-DELETE /contacts/1
-```
-
 ## 🧪 Testing Using CURL
 
-### Add Contact
+### Add Multiple Contacts
 ```
-curl -X POST http://localhost:8080/contacts -H "Content-Type: application/json" -d "{\"id\":1,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"MP Nagar\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"9876543210\",\"email\":\"arya@email.com\"}"
-```
-
-### Get Contact by ID
-```
-curl http://localhost:8080/contacts/1
+curl -X POST http://localhost:8080/contacts/bulk -H "Content-Type: application/json" -d "[{\"id\":2,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"MP Nagar\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"8888888888\",\"email\":\"arya@email.com\"},{\"id\":3,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"Bhopal\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"7777777777\",\"email\":\"arya@email.com\"}]"
 ```
 
-### Update Contact
+### Get All Contacts
 ```
-curl -X PUT http://localhost:8080/contacts/1 -H "Content-Type: application/json" -d "{\"id\":1,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"Bhopal\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"9999999999\",\"email\":\"arya@email.com\"}"
-```
-
-### Delete Contact
-```
-curl -X DELETE http://localhost:8080/contacts/1
+curl http://localhost:8080/contacts
 ```
 
 ## ▶️ How to Run the Project
@@ -170,7 +146,7 @@ curl -X DELETE http://localhost:8080/contacts/1
 git clone https://github.com/<your-username>/AddressBookApp.git
 ```
 
-### 2️⃣ Navigate to project directory
+### 2️⃣ Navigate to the project
 ```
 cd AddressBookApp
 ```
@@ -195,10 +171,10 @@ http://localhost:8080/contacts
 
 ## 🌿 Git Branch
 ```
-feature/UC4-delete-contact
+feature/UC5-add-multiple-contacts
 ```
 
-This branch implements Use Case 4 – Delete Contact.
+This branch implements Use Case 5 – Add Multiple Contacts.
 
 After review it will be merged into:
 
