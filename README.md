@@ -1,14 +1,18 @@
 # 📒 AddressBookApp
 A Spring Boot REST API application for managing contacts in an Address Book.
 
-The project is implemented using a **Git Feature Branch Workflow**, where each use case is developed in a separate branch and merged into the **dev** branch.
+This project follows a **Git Feature Branch Workflow**, where each Use Case (UC) is implemented in a separate branch and later merged into the **dev** branch.
 
-## 🚀 UC13 – Read / Write Address Book Using File IO
-This branch introduces **File Input/Output operations** for the Address Book application.
+## 🚀 UC14 – Read / Write Address Book Using CSV
+This branch introduces functionality to store and retrieve Address Book contacts using a **CSV file**.
 
-Contacts can now be written to a file using **Java File IO**.
+The application now supports:
 
-This allows **persistent storage of contact information outside the application memory**.
+- Writing contacts to a CSV file  
+- Reading contacts from a CSV file  
+- Using the **OpenCSV library** for CSV operations  
+
+CSV files make it easy to store **structured data in a tabular format**, which can later be opened in tools like **Excel**.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -16,7 +20,7 @@ This allows **persistent storage of contact information outside the application 
 📦 Maven  
 🔗 REST API  
 🐙 Git & GitHub  
-📁 Java File IO  
+📄 OpenCSV Library  
 
 ## 📂 Project Structure
 ```
@@ -34,74 +38,101 @@ AddressBookApp
 │
 ├── io
 │      AddressBookFileService.java
+│      AddressBookCSVService.java
 │
 └── AddressBookAppApplication.java
 ```
 
+## 📄 CSV File Format
+
+Contacts are stored in:
+
+```
+contacts.csv
+```
+
+Example file content:
+
+```
+ID,FirstName,LastName,Address,City,State,Zip,Phone,Email
+1,Arya,Mishra,Bhopal,Bhopal,MP,462001,9876543210,arya@email.com
+2,Rahul,Sharma,Delhi,Delhi,Delhi,110001,8888888888,rahul@email.com
+```
+
+Each row represents a **contact entry**.
+
 ## 🧠 Implementation Logic
-Contacts are retrieved from all address books and written to a text file.
 
-The application performs the following steps:
+The **OpenCSV library** is used to read and write CSV files.
 
-1️⃣ Retrieve all contacts using  
+### Write CSV
 ```
-addressBookService.getAllContacts()
-```
-
-2️⃣ Pass contacts to the File Service  
-```
-AddressBookFileService.writeContactsToFile()
+CSVWriter writer = new CSVWriter(new FileWriter("contacts.csv"));
 ```
 
-3️⃣ Write contact details to  
+### Read CSV
 ```
-contacts.txt
-```
-
-## 📁 Example File Output
-Example content of **contacts.txt**:
-
-```
-Arya Mishra Bhopal
-Rahul Sharma Delhi
-Priya Patel Ahmedabad
+CSVReader reader = new CSVReader(new FileReader("contacts.csv"));
 ```
 
-Each line represents a **contact entry**.
+Contacts are converted between **Java objects and CSV rows**.
 
-## 🌐 API Endpoint
+## 🌐 API Endpoints
 
-### Write Contacts to File
+### Write Contacts to CSV
 ```
-GET /contacts/write
+GET /contacts/csv/write
 ```
 
-This API retrieves all contacts and writes them to the file.
+This API retrieves all contacts from the Address Book and writes them to a CSV file.
+
+### Read Contacts from CSV
+```
+GET /contacts/csv/read
+```
+
+This API reads contacts from the CSV file and returns them as a list.
 
 ## 🧪 Testing Using CURL
 
+### Write CSV File
 ```
-curl http://localhost:8080/contacts/write
+curl http://localhost:8080/contacts/csv/write
 ```
 
 Response:
 
 ```
-Contacts written to file
+Contacts written to CSV file
 ```
 
-A file named **contacts.txt** will be created in the **project directory**.
+### Read CSV File
+```
+curl http://localhost:8080/contacts/csv/read
+```
+
+Example Response
+
+```
+[
+ {
+  "id":1,
+  "firstName":"Arya",
+  "lastName":"Mishra",
+  "city":"Bhopal"
+ }
+]
+```
 
 ## 🌿 Git Branch
 ```
-feature/UC13-read-write-addressbook-file-io
+feature/UC14-read-write-addressbook-csv
 ```
 
-This branch implements **Use Case 13 – File IO for Address Book Contacts.**
+This branch implements **Use Case 14 – CSV File Operations.**
 
 After review it will be merged into:
 
 ```
 dev
 ```
-
