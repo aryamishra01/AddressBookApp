@@ -1,31 +1,21 @@
 # 📒 AddressBookApp
+A Spring Boot REST API application for managing contacts in an Address Book.
 
-A **Spring Boot REST API application** for managing contacts in an Address Book.
+This project follows a Git Feature Branch Workflow, where every Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-This project is developed using a **Git Feature Branch Workflow**, where each **Use Case (UC)** is implemented in a separate branch and later merged into the `dev` branch.
+## 🚀 UC2 – Add Contact Using Service Layer
+This branch implements the ability to add a new contact to the Address Book using a REST API.
 
----
+The contacts are stored in a local in-memory list and accessed through a Service Layer, following the Controller → Service → Model architecture.
 
-# 🚀 UC1 – Create Contact Model & Basic Controller
+## 🛠 Tech Stack
+☕ Java 17  
+🌱 Spring Boot  
+📦 Maven  
+🔗 REST API  
+🐙 Git & GitHub  
 
-This branch implements the **initial setup** of the Address Book application.
-
-It includes the **Contact model** and a **basic REST API endpoint** to verify that the Spring Boot application is running successfully.
-
----
-
-# 🛠 Tech Stack
-
-- ☕ **Java 17**
-- 🌱 **Spring Boot**
-- 📦 **Maven**
-- 🔗 **REST API**
-- 🐙 **Git & GitHub**
-
----
-
-# 📂 Project Structure
-
+## 📂 Project Structure
 ```
 AddressBookApp
 │
@@ -33,6 +23,9 @@ AddressBookApp
 │
 │   ├── controller
 │   │      AddressBookController.java
+│   │
+│   ├── service
+│   │      AddressBookService.java
 │   │
 │   ├── model
 │   │      Contact.java
@@ -45,13 +38,41 @@ AddressBookApp
 └── pom.xml
 ```
 
----
+## 🧠 Architecture
+```
+Client (CURL / Postman / Browser)
+            │
+            ▼
+        Controller
+            │
+            ▼
+         Service
+            │
+            ▼
+     Local List Storage
+```
 
-# 👤 Contact Model
+### Responsibilities
 
-The **Contact** class represents a person in the Address Book.
+**Controller**
 
-### Fields Included
+Handles HTTP requests  
+Calls service methods  
+Returns API responses  
+
+**Service**
+
+Contains business logic  
+Manages contact list  
+
+**Model**
+
+Represents Contact data structure  
+
+## 👤 Contact Model
+The Contact class represents a person in the Address Book.
+
+### Fields
 
 | Field | Description |
 |------|-------------|
@@ -59,85 +80,80 @@ The **Contact** class represents a person in the Address Book.
 | firstName | Person's first name |
 | lastName | Person's last name |
 | address | Street address |
-| city | City name |
-| state | State name |
+| city | City |
+| state | State |
 | zip | Postal code |
-| phoneNumber | Contact phone number |
+| phoneNumber | Contact number |
 | email | Email address |
 
----
+## 🌐 API Endpoints
 
-# 🌐 API Endpoint
-
-## Welcome API
-
+### ➕ Add Contact
 ```
-GET /addressbook
+POST /contacts
 ```
 
-This endpoint verifies that the **Address Book application is running**.
+Adds a new contact to the address book.
 
----
-
-# 🧪 Test Using CURL
-
-Run the following command in terminal:
-
-```bash
-curl http://localhost:8080/addressbook
+### 📋 Get All Contacts
+```
+GET /contacts
 ```
 
-### Expected Response
+Returns the list of all contacts stored in memory.
 
+## 🧪 Testing Using CURL
+
+### Add Contact
 ```
-Welcome to Address Book Application
-```
-
----
-
-# ▶️ How to Run the Project
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/<your-username>/AddressBookApp.git
+curl -X POST http://localhost:8080/contacts -H "Content-Type: application/json" -d "{\"id\":1,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"address\":\"MP Nagar\",\"city\":\"Bhopal\",\"state\":\"MP\",\"zip\":\"462001\",\"phoneNumber\":\"9876543210\",\"email\":\"arya@email.com\"}"
 ```
 
-### 2️⃣ Navigate to the Project
+### Get All Contacts
+```
+curl http://localhost:8080/contacts
+```
 
-```bash
+## ▶️ How to Run the Project
+
+### 1️⃣ Clone the repository
+```
+git clone https://github.com/<aryamishra01>/AddressBookApp.git
+```
+
+### 2️⃣ Navigate to project folder
+```
 cd AddressBookApp
 ```
 
-### 3️⃣ Run the Spring Boot Application
-
-```bash
+### 3️⃣ Run the Spring Boot application
+```
 mvn spring-boot:run
 ```
 
-Or run **AddressBookAppApplication.java** from your IDE.
-
-### 4️⃣ Open in Browser
+or run
 
 ```
-http://localhost:8080/addressbook
+AddressBookAppApplication.java
 ```
 
----
+from your IDE.
 
-# 🌿 Git Branch
-
+### 4️⃣ Access the API
 ```
-feature/UC1-create-contact
+http://localhost:8080/contacts
 ```
 
-This branch contains the **implementation for Use Case 1**.
+## 🌿 Git Branch
+```
+feature/UC2-add-contact
+```
+
+This branch implements Use Case 2 – Add Contact.
 
 After review it will be merged into:
 
 ```
 dev
 ```
-
 ---
-
