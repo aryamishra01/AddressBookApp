@@ -167,4 +167,13 @@ public class AddressBookService {
                 .sorted(Comparator.comparing(Contact::getZip))
                 .toList();
     }
+    
+    // Get All Contacts across all Address Books
+    public List<Contact> getAllContacts() {
+
+        return addressBooks.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContacts().stream())
+                .toList();
+    }
 }
