@@ -3,12 +3,12 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC10 – Count Contacts by City or State
-This branch introduces functionality to count the number of contacts grouped by city or state.
+## 🚀 UC11 – Sort Contacts by Name
+This branch introduces functionality to sort contacts alphabetically by name.
 
-Instead of listing contacts, this feature returns the total number of contacts belonging to each city or state.
+The sorting operation retrieves all contacts across all address books and returns them sorted by first name.
 
-The implementation uses Java Streams API with grouping and counting collectors.
+The implementation uses Java Streams API with Comparator sorting.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -43,70 +43,40 @@ AddressBookApp
 ```
 
 ## 🧠 Implementation Logic
-All contacts across all address books are collected using **Java Streams**, then grouped by city or state and counted.
-
-Example logic:
+All contacts across all address books are collected and sorted using Java Streams:
 
 ```
 contacts.stream()
-        .collect(groupingBy(Contact::getCity, counting()))
+        .sorted(Comparator.comparing(Contact::getFirstName))
 ```
 
-## 🌐 API Endpoints
+This sorts contacts alphabetically by **first name**.
 
-### 📍 Count Contacts by City
-```
-GET /contacts/count/city
-```
+## 🌐 API Endpoint
 
-Example Response
-
+### 🔤 Sort Contacts by Name
 ```
-{
- "Bhopal": 3,
- "Delhi": 2
-}
-```
-
-Example Contacts Considered
-
-```
-Arya Mishra  → Bhopal
-Arya Mishra  → Bhopal
-Rahul Sharma → Delhi
-Priya Patel  → Delhi
-Arya Mishra  → Bhopal
-```
-
-### 📍 Count Contacts by State
-```
-GET /contacts/count/state
+GET /contacts/sort/name
 ```
 
 Example Response
 
 ```
-{
- "MP": 3,
- "Delhi": 2
-}
+[
+ { "firstName":"Arya", "lastName":"Mishra" },
+ { "firstName":"Bhumi", "lastName":"Shrivas" },
+ { "firstName":"Rahul", "lastName":"Sharma" }
+]
 ```
 
 ## 🧪 Testing Using CURL
-
-### Count by City
 ```
-curl http://localhost:8080/contacts/count/city
-```
-
-### Count by State
-```
-curl http://localhost:8080/contacts/count/state
+curl http://localhost:8080/contacts/sort/name
 ```
 
 ## 🌿 Git Branch
 ```
-feature/UC10-count-contacts-by-city-or-state
+feature/UC11-sort-contacts-by-name
 ```
 
 After review this branch will be merged into:
@@ -114,4 +84,3 @@ After review this branch will be merged into:
 ```
 dev
 ```
----
