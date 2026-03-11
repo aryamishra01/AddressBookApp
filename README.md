@@ -3,13 +3,12 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC7 – Prevent Duplicate Contact
-This branch introduces functionality to prevent duplicate contacts from being added to an Address Book.
+## 🚀 UC8 – Search Person by City or State
+This branch introduces functionality to search contacts by city or state across all address books.
 
-Previously, the system allowed multiple contacts with the same name to be inserted.  
-With UC7 implemented, the application now checks for duplicate entries before adding a contact.
+The search feature allows users to retrieve contacts that belong to a specific city or state, making it easier to locate people based on geographic information.
 
-A contact is considered duplicate if the **first name and last name match an existing contact in the same address book.**
+The implementation uses Java Streams API to efficiently filter contacts.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -17,6 +16,7 @@ A contact is considered duplicate if the **first name and last name match an exi
 📦 Maven  
 🔗 REST API  
 🐙 Git & GitHub  
+⚡ Java Streams API  
 
 ## 📂 Project Structure
 ```
@@ -44,112 +44,92 @@ AddressBookApp
 
 ## 🧠 Architecture
 ```
-Client (CURL / Postman / Browser)
-            │
-            ▼
-        Controller
-            │
-            ▼
-         Service
-            │
-            ▼
-     Map<String, AddressBook>
+Client (CURL / Postman)
+        │
+        ▼
+     Controller
+        │
+        ▼
+      Service
+        │
+        ▼
+Map<String, AddressBook>
+        │
+        ▼
+Java Streams Filtering
 ```
 
-Each AddressBook contains its own list of contacts.
+Contacts from all address books are collected and filtered using Streams.
 
-Duplicate checking occurs inside the **Service Layer** before inserting a new contact.
+## 🔎 Search Logic (Java Streams)
 
-## 🚫 Duplicate Prevention Logic
-To detect duplicates, the **equals()** and **hashCode()** methods are implemented in the `Contact` class.
+Contacts are retrieved using:
 
-Two contacts are considered equal if:
+```
+addressBooks.values()
+        .stream()
+        .flatMap(addressBook -> addressBook.getContacts().stream())
+```
 
-**firstName + lastName are the same**
-
-Example:
-
-| Contact 1 | Contact 2 | Result |
-|-----------|-----------|--------|
-| Arya Mishra | Arya Mishra | ❌ Duplicate |
-| Arya Mishra | Rahul Sharma | ✅ Allowed |
+Then filtered by **city** or **state**.
 
 ## 🌐 API Endpoints
 
-### 📚 Create Address Book
+### 🔍 Search by City
 ```
-POST /addressbooks?name=Personal
+GET /contacts/city/{city}
 ```
-Creates a new address book.
-
-### ➕ Add Contact
-```
-POST /addressbooks/{name}/contacts
-```
-Adds a contact to the specified address book.
-
-If a duplicate contact is detected, the system will return a duplicate warning message.
 
 Example:
 
 ```
-POST /addressbooks/Personal/contacts
+GET /contacts/city/Bhopal
 ```
 
-### 👥 Get Contacts
+### 🔍 Search by State
 ```
-GET /addressbooks/{name}/contacts
+GET /contacts/state/{state}
 ```
-Returns all contacts from the specified address book.
 
-### 📋 Get All Address Books
+Example:
+
 ```
-GET /addressbooks
+GET /contacts/state/MP
 ```
-Returns all address books.
 
 ## 🧪 Testing Using CURL
 
-### Create Address Book
+### Search by City
 ```
-curl -X POST "http://localhost:8080/addressbooks?name=Personal"
-```
-
-### Add Contact
-```
-curl -X POST http://localhost:8080/addressbooks/Personal/contacts -H "Content-Type: application/json" -d "{\"id\":1,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"city\":\"Bhopal\"}"
+curl http://localhost:8080/contacts/city/Bhopal
 ```
 
-Response:
-
+### Search by State
 ```
-Contact added successfully
-```
-
-### Try Duplicate Contact
-```
-curl -X POST http://localhost:8080/addressbooks/Personal/contacts -H "Content-Type: application/json" -d "{\"id\":2,\"firstName\":\"Arya\",\"lastName\":\"Mishra\",\"city\":\"Bhopal\"}"
+curl http://localhost:8080/contacts/state/MP
 ```
 
-Response:
-
+### Example Response
 ```
-Duplicate contact not allowed
+[
+ {
+  "id":1,
+  "firstName":"Arya",
+  "lastName":"Mishra",
+  "city":"Bhopal",
+  "state":"MP"
+ }
+]
 ```
 
 ## ▶️ How to Run the Project
 
-### 1️⃣ Clone repository
+### Clone repository
 ```
 git clone https://github.com/<your-username>/AddressBookApp.git
 ```
 
-### 2️⃣ Navigate to project directory
-```
-cd AddressBookApp
-```
-
-### 3️⃣ Run the application
+### Run project
 ```
 mvn spring-boot:run
 ```
@@ -162,19 +142,12 @@ AddressBookAppApplication.java
 
 from your IDE.
 
-### 4️⃣ Access APIs
-```
-http://localhost:8080/addressbooks
-```
-
 ## 🌿 Git Branch
 ```
-feature/UC7-prevent-duplicate-contact
+feature/UC8-search-person-by-city-or-state
 ```
 
-This branch implements **Use Case 7 – Prevent Duplicate Contact.**
-
-After review it will be merged into:
+After review this branch will be merged into:
 
 ```
 dev
