@@ -3,12 +3,12 @@ A Spring Boot REST API application for managing contacts in an Address Book.
 
 This project follows a Git Feature Branch Workflow, where each Use Case (UC) is implemented in a separate branch and later merged into the dev branch.
 
-## 🚀 UC9 – View Persons by City or State
-This branch introduces functionality to view all persons grouped by their city or state.
+## 🚀 UC10 – Count Contacts by City or State
+This branch introduces functionality to count the number of contacts grouped by city or state.
 
-Unlike UC8 where contacts were searched individually, UC9 allows users to view a grouped list of contacts based on city or state.
+Instead of listing contacts, this feature returns the total number of contacts belonging to each city or state.
 
-This feature uses the Java Streams API with grouping operations.
+The implementation uses Java Streams API with grouping and counting collectors.
 
 ## 🛠 Tech Stack
 ☕ Java 17  
@@ -42,99 +42,71 @@ AddressBookApp
 └── pom.xml
 ```
 
-## 🧠 Architecture
-```
-Client (CURL / Postman)
-        │
-        ▼
-     Controller
-        │
-        ▼
-      Service
-        │
-        ▼
-Map<String, AddressBook>
-        │
-        ▼
-Java Streams Grouping
-```
+## 🧠 Implementation Logic
+All contacts across all address books are collected using **Java Streams**, then grouped by city or state and counted.
 
-Contacts are retrieved from all address books and grouped by **city or state**.
+Example logic:
+
+```
+contacts.stream()
+        .collect(groupingBy(Contact::getCity, counting()))
+```
 
 ## 🌐 API Endpoints
 
-### 📍 View Persons by City
+### 📍 Count Contacts by City
 ```
-GET /contacts/view/city
+GET /contacts/count/city
 ```
 
-Returns contacts grouped by city.
-
-Example Response:
+Example Response
 
 ```
 {
- "Bhopal": [
-   { "firstName": "Arya", "lastName": "Mishra" },
-   { "firstName": "Rahul", "lastName": "Sharma" }
- ],
- "Delhi": [
-   { "firstName": "Priya", "lastName": "Patel" }
- ]
+ "Bhopal": 3,
+ "Delhi": 2
 }
 ```
 
-### 📍 View Persons by State
+Example Contacts Considered
+
 ```
-GET /contacts/view/state
+Arya Mishra  → Bhopal
+Arya Mishra  → Bhopal
+Rahul Sharma → Delhi
+Priya Patel  → Delhi
+Arya Mishra  → Bhopal
 ```
 
-Returns contacts grouped by state.
+### 📍 Count Contacts by State
+```
+GET /contacts/count/state
+```
 
-Example Response:
+Example Response
 
 ```
 {
- "MP": [
-   { "firstName": "Arya", "lastName": "Mishra" }
- ],
- "Delhi": [
-   { "firstName": "Rahul", "lastName": "Sharma" }
- ]
+ "MP": 3,
+ "Delhi": 2
 }
 ```
 
 ## 🧪 Testing Using CURL
 
-### View Persons by City
+### Count by City
 ```
-curl http://localhost:8080/contacts/view/city
-```
-
-### View Persons by State
-```
-curl http://localhost:8080/contacts/view/state
+curl http://localhost:8080/contacts/count/city
 ```
 
-## ▶️ How to Run the Project
-
-Clone repository:
-
+### Count by State
 ```
-git clone https://github.com/<your-username>/AddressBookApp.git
+curl http://localhost:8080/contacts/count/state
 ```
-
-Run application:
-
-```
-mvn spring-boot:run
-```
-
-or run **AddressBookAppApplication.java** from your IDE.
 
 ## 🌿 Git Branch
 ```
-feature/UC9-view-persons-by-city-or-state
+feature/UC10-count-contacts-by-city-or-state
 ```
 
 After review this branch will be merged into:
